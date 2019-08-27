@@ -6,7 +6,9 @@ import * as WebSocket from "ws"
 const app = Express()
 
 app.get("/", (_, res) => {
-	res.sendFile(__dirname + "/nohttp.htm")
+	let path = __dirname.split("/")
+	path.pop()
+	res.sendFile(path.join("/") + "/nohttp.htm")
 })
 
 const wss = new WebSocket.Server({server: app.listen(5463)})
