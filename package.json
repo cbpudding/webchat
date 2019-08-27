@@ -1,0 +1,31 @@
+{
+  "name": "webchat",
+  "version": "1.0.0",
+  "description": "A webchat you need to program a client for!",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbpudding/webchat.git"
+  },
+  "author": "Alexander Hill",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cbpudding/webchat/issues"
+  },
+  "homepage": "https://github.com/cbpudding/webchat#readme",
+  "dependencies": {
+    "@types/uuid": "^3.4.5",
+    "cbor": "^4.2.1",
+    "express": "^4.17.1",
+    "uuid": "^3.3.3",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {
+    "@types/cbor": "^2.0.0",
+    "@types/express": "^4.17.1",
+    "@types/ws": "^6.0.3"
+  }
+}
