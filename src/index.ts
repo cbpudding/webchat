@@ -21,8 +21,12 @@ wss.on("connection", ws => {
 	ws.sanitize = true
 	ws.uuid = UUID.v4()
 	ws.on("message", (data: Buffer) => {
-		var msg = CBOR.decodeAllSync(data)
-		handleMessage(ws, msg)
+		try {
+			var msg = CBOR.decode(data)
+			handleMessage(ws, msg)
+		} catch(error) {
+			console.error(error)
+		}
 	})
 	ws.send(CBOR.encode({
 		type: 0,
@@ -68,9 +72,9 @@ function handleMessage(ws: any, msg: any) {
 		wss.clients.forEach((client: any) => {
 			if(client.readyState === WebSocket.OPEN) {
 				if(client.sanitize) {
-					client.send(smsg)
+					client.send(CBOR.encode(smsg))
 				} else {
-					client.send(umsg)
+					client.send(CBOR.encode(umsg))
 				}
 			}
 		})
@@ -136,20 +140,14 @@ function broadcastMessage(msg: any) {
 	})
 }
 
-var delay = 0
-
 setInterval(() => {
-	delay = (delay + 1) % 10
-	switch(delay) {
-	case 0:
-		broadcastMessage({type: 9})
-		break
-	case 5:
-		wss.clients.forEach((client: any) => {
-			if(client.readyState === WebSocket.OPEN) {
+	wss.clients.forEach((client: any) => {
+		if(client.readyState === WebSocket.OPEN) {
+			if(client.last < (Date.now() - 1000)) {
 				client.terminate()
+			} else if(client.last < (Date.now() - 500)) {
+				client.send(CBOR.encode({type: 9}))
 			}
-		})
-		break
-	}
+		}
+	})
 }, 100)
